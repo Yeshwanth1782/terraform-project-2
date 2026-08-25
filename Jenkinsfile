@@ -15,6 +15,17 @@ pipeline {
             }
         }
 
+        stage('Trivy Image Scan') {
+            steps {
+                sh '''
+                    trivy image \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    project2-app:ci
+                '''
+            }
+        }
+
         stage('Test Container') {
             steps {
                 sh 'docker run -d --name project2-test -p 8081:5000 project2-app:ci'
